@@ -1,0 +1,16 @@
+{% extends "agenda/base.html" %}
+{% block titulo %}Cancelar agendamento{% endblock %}
+{% block conteudo %}
+<h2 class="h5">Cancelar agendamento</h2>
+<p>{{ agendamento.servico.nome }} em {{ agendamento.inicio|date:"d/m/Y" }} às {{ agendamento.inicio|date:"H:i" }}. Para cancelar, digite o telefone usado no agendamento.</p>
+{% if erro %}<div class="alert alert-danger" role="alert">⚠ {{ erro }}</div>{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="telefone" class="form-label">Telefone</label>
+    <input id="telefone" name="telefone" type="tel" inputmode="numeric" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-danger">Cancelar agendamento</button>
+  <a class="btn btn-link" href="{% url 'resultado' agendamento.pk %}">Voltar</a>
+</form>
+{% endblock %}
