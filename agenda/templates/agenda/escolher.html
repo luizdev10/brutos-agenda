@@ -32,9 +32,9 @@
 {% if servico and barbeiro %}
   <h3 class="h6">Horários livres em {{ dia|date:"d/m/Y" }}</h3>
   {% if horarios %}
-    <div class="d-flex flex-wrap gap-2">
+    <div class="d-flex flex-wrap gap-3">
       {% for valor, rotulo in horarios %}
-        <a class="btn btn-primary horario" href="{% url 'confirmar' %}?servico={{ servico.pk }}&barbeiro={{ barbeiro.pk }}&inicio={{ valor }}">{{ rotulo }}</a>
+        <a class="btn btn-primary horario" aria-label="Escolher {{ rotulo }} em {{ dia|date:'d/m/Y' }}" href="{% url 'confirmar' %}?servico={{ servico.pk }}&barbeiro={{ barbeiro.pk }}&inicio={{ valor }}">{{ rotulo }}</a>
       {% endfor %}
     </div>
   {% else %}

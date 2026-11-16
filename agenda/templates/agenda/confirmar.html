@@ -3,6 +3,9 @@
 {% block passo %}<p class="mb-0 small">Passo 2 de 3</p>{% endblock %}
 {% block conteudo %}
 <h2 class="h5">Confirmar agendamento</h2>
+<div class="border border-3 border-dark rounded p-3 mb-3 fs-5 fw-bold" role="status">
+  🕒 Você escolheu: {{ inicio|date:"l, d/m/Y" }}, às {{ inicio|date:"H:i" }}
+</div>
 <dl class="row">
   <dt class="col-4">Serviço</dt><dd class="col-8">{{ servico.nome }} (R$ {{ servico.preco }})</dd>
   <dt class="col-4">Barbeiro</dt><dd class="col-8">{{ barbeiro.nome }}</dd>
@@ -24,6 +27,6 @@
     {% for e in form.telefone.errors %}<div class="invalid-feedback d-block" role="alert">⚠ {{ e }}</div>{% endfor %}
   </div>
   <button type="submit" class="btn btn-primary">Confirmar agendamento</button>
-  <a class="btn btn-link" href="{% url 'escolher' %}?servico={{ servico.pk }}&barbeiro={{ barbeiro.pk }}">Voltar</a>
+  <a class="btn btn-link" href="{% url 'escolher' %}?servico={{ servico.pk }}&barbeiro={{ barbeiro.pk }}&dia={{ inicio|date:'Y-m-d' }}">Trocar horário</a>
 </form>
 {% endblock %}
