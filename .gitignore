@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+db.sqlite3
+.env
+.venv/
+.coverage
+htmlcov/
+.pytest_cache/
+contexto_*.md
+CONTEXTO*.md
