@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_SECRET_KEY: chave-somente-para-ci
+      DJANGO_DEBUG: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+      - name: Verificar migrações pendentes
+        run: python manage.py makemigrations --check --dry-run
+      - name: Checagem do Django
+        run: python manage.py check
+      - name: Testes com cobertura
+        run: pytest --cov=agenda --cov-report=term-missing --cov-fail-under=80
