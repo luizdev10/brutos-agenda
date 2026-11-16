@@ -8,3 +8,7 @@ htmlcov/
 .pytest_cache/
 contexto_*.md
 CONTEXTO*.md
+*.jfif
+staticfiles/
+*.zip
+*.png
