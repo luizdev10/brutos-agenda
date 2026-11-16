@@ -13,6 +13,10 @@ if not SECRET_KEY:
         raise RuntimeError("Defina DJANGO_SECRET_KEY no ambiente.")
 
 ALLOWED_HOSTS = [h for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h]
+# Origens HTTPS confiáveis para formulários em produção (ex.: https://brutos-agenda.onrender.com).
+CSRF_TRUSTED_ORIGINS = [o for o in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if o]
+# Atrás do proxy da nuvem, o HTTPS chega via cabeçalho (evita loop de redirecionamento).
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -54,8 +58,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# PostgreSQL em produção (variáveis POSTGRES_*); SQLite apenas para testes locais.
-if os.environ.get("POSTGRES_DB"):
+# PostgreSQL em produção (DATABASE_URL ou variáveis POSTGRES_*); SQLite apenas para testes locais.
+if os.environ.get("DATABASE_URL"):
+    from urllib.parse import unquote, urlparse
+
+    _url = urlparse(os.environ["DATABASE_URL"])
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": _url.path.lstrip("/"),
+            "USER": unquote(_url.username or ""),
+            "PASSWORD": unquote(_url.password or ""),
+            "HOST": _url.hostname or "localhost",
+            "PORT": str(_url.port or 5432),
+        }
+    }
+elif os.environ.get("POSTGRES_DB"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
