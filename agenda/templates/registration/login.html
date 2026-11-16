@@ -1,0 +1,18 @@
+{% extends "agenda/base.html" %}
+{% block titulo %}Entrar{% endblock %}
+{% block conteudo %}
+<h2 class="h5">Acesso da equipe</h2>
+<form method="post">
+  {% csrf_token %}
+  {% if form.errors %}<div class="alert alert-danger" role="alert">⚠ Usuário ou senha incorretos, ou acesso temporariamente bloqueado.</div>{% endif %}
+  <div class="mb-3">
+    <label for="id_username" class="form-label">Usuário</label>
+    <input id="id_username" name="username" type="text" class="form-control" required autocomplete="username">
+  </div>
+  <div class="mb-3">
+    <label for="id_password" class="form-label">Senha</label>
+    <input id="id_password" name="password" type="password" class="form-control" required autocomplete="current-password">
+  </div>
+  <button type="submit" class="btn btn-primary">Entrar</button>
+</form>
+{% endblock %}
