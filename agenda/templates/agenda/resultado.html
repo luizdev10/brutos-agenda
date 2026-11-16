@@ -1,0 +1,16 @@
+{% extends "agenda/base.html" %}
+{% block titulo %}Resultado do agendamento{% endblock %}
+{% block passo %}<p class="mb-0 small">Passo 3 de 3</p>{% endblock %}
+{% block conteudo %}
+{% if recusado %}
+  <div class="alert alert-danger" role="alert">✖ Esse horário acabou de ser ocupado. Escolha outro.</div>
+  <a class="btn btn-primary" href="{% url 'escolher' %}">Escolher outro horário</a>
+{% elif agendamento.status == "cancelado" %}
+  <div class="alert alert-secondary" role="status">✖ Agendamento cancelado.</div>
+  <a class="btn btn-primary" href="{% url 'escolher' %}">Novo agendamento</a>
+{% else %}
+  <div class="alert alert-success" role="status">✔ Agendamento confirmado: {{ agendamento.servico.nome }}, {{ agendamento.barbeiro.nome }}, {{ agendamento.inicio|date:"d/m/Y" }} às {{ agendamento.inicio|date:"H:i" }}.</div>
+  <a class="btn btn-primary" href="{% url 'escolher' %}">Novo agendamento</a>
+  <a class="btn btn-link" href="{% url 'cancelar' agendamento.pk %}">Cancelar agendamento</a>
+{% endif %}
+{% endblock %}

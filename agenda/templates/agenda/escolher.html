@@ -1,0 +1,44 @@
+{% extends "agenda/base.html" %}
+{% block titulo %}Escolher serviço e horário{% endblock %}
+{% block passo %}<p class="mb-0 small">Passo 1 de 3</p>{% endblock %}
+{% block conteudo %}
+<h2 class="h5">Escolher serviço e horário</h2>
+<form method="get" class="mb-4">
+  <div class="mb-3">
+    <label for="servico" class="form-label">Serviço</label>
+    <select id="servico" name="servico" class="form-select" required>
+      <option value="">Selecione</option>
+      {% for s in servicos %}
+        <option value="{{ s.pk }}" {% if servico and servico.pk == s.pk %}selected{% endif %}>{{ s.nome }} - {{ s.duracao_min }} min - R$ {{ s.preco }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="barbeiro" class="form-label">Barbeiro</label>
+    <select id="barbeiro" name="barbeiro" class="form-select" required>
+      <option value="">Selecione</option>
+      {% for b in barbeiros %}
+        <option value="{{ b.pk }}" {% if barbeiro and barbeiro.pk == b.pk %}selected{% endif %}>{{ b.nome }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="dia" class="form-label">Dia</label>
+    <input id="dia" name="dia" type="date" class="form-control" min="{{ hoje|date:'Y-m-d' }}" value="{{ dia|date:'Y-m-d' }}">
+  </div>
+  <button type="submit" class="btn btn-secondary">Ver horários livres</button>
+</form>
+
+{% if servico and barbeiro %}
+  <h3 class="h6">Horários livres em {{ dia|date:"d/m/Y" }}</h3>
+  {% if horarios %}
+    <div class="d-flex flex-wrap gap-2">
+      {% for valor, rotulo in horarios %}
+        <a class="btn btn-primary horario" href="{% url 'confirmar' %}?servico={{ servico.pk }}&barbeiro={{ barbeiro.pk }}&inicio={{ valor }}">{{ rotulo }}</a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p role="status">Não há horários livres neste dia. Escolha outro dia ou outro barbeiro.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

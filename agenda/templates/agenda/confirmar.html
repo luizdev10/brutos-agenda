@@ -1,0 +1,29 @@
+{% extends "agenda/base.html" %}
+{% block titulo %}Confirmar agendamento{% endblock %}
+{% block passo %}<p class="mb-0 small">Passo 2 de 3</p>{% endblock %}
+{% block conteudo %}
+<h2 class="h5">Confirmar agendamento</h2>
+<dl class="row">
+  <dt class="col-4">Serviço</dt><dd class="col-8">{{ servico.nome }} (R$ {{ servico.preco }})</dd>
+  <dt class="col-4">Barbeiro</dt><dd class="col-8">{{ barbeiro.nome }}</dd>
+  <dt class="col-4">Quando</dt><dd class="col-8">{{ inicio|date:"d/m/Y" }} às {{ inicio|date:"H:i" }}</dd>
+</dl>
+<form method="post" novalidate>
+  {% csrf_token %}
+  <input type="hidden" name="servico" value="{{ servico.pk }}">
+  <input type="hidden" name="barbeiro" value="{{ barbeiro.pk }}">
+  <input type="hidden" name="inicio" value="{{ inicio_iso }}">
+  <div class="mb-3">
+    <label for="{{ form.nome.id_for_label }}" class="form-label">Nome</label>
+    <input id="{{ form.nome.id_for_label }}" name="nome" type="text" class="form-control {% if form.nome.errors %}is-invalid{% endif %}" value="{{ form.nome.value|default_if_none:'' }}" required autocomplete="name">
+    {% for e in form.nome.errors %}<div class="invalid-feedback d-block" role="alert">⚠ {{ e }}</div>{% endfor %}
+  </div>
+  <div class="mb-3">
+    <label for="{{ form.telefone.id_for_label }}" class="form-label">Telefone</label>
+    <input id="{{ form.telefone.id_for_label }}" name="telefone" type="tel" inputmode="numeric" class="form-control {% if form.telefone.errors %}is-invalid{% endif %}" value="{{ form.telefone.value|default_if_none:'' }}" required autocomplete="tel">
+    {% for e in form.telefone.errors %}<div class="invalid-feedback d-block" role="alert">⚠ {{ e }}</div>{% endfor %}
+  </div>
+  <button type="submit" class="btn btn-primary">Confirmar agendamento</button>
+  <a class="btn btn-link" href="{% url 'escolher' %}?servico={{ servico.pk }}&barbeiro={{ barbeiro.pk }}">Voltar</a>
+</form>
+{% endblock %}
