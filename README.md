@@ -48,6 +48,15 @@ python manage.py runserver
 Cadastre serviços e barbeiros em `/admin/` (associe a conta do barbeiro ao cadastro dele
 para ele ver o painel em `/painel/`). A tela do cliente fica em `/`.
 
+## Produção (configuração preparada, ainda não validada)
+
+- **Arquivos estáticos:** servidos pelo WhiteNoise. Rode `python manage.py collectstatic --noinput`
+  no deploy.
+- **PostgreSQL:** defina `POSTGRES_DB` (e as demais `POSTGRES_*`) e rode `python manage.py migrate`.
+  A configuração existe, mas **não foi testada contra um PostgreSQL real**; os testes
+  automatizados usam SQLite. Valide num banco real antes de usar de verdade.
+- Defina `DJANGO_SECRET_KEY` e `DJANGO_ALLOWED_HOSTS`, e mantenha `DJANGO_DEBUG` desligado.
+
 ## Testes
 
 ```bash
