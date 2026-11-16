@@ -121,3 +121,28 @@ def test_nao_cancela_atendimento_ja_concluido(client, servico, barbeiro, amanha_
     ag.refresh_from_db()
     assert r.status_code == 200 and ag.status == Agendamento.Status.CONCLUIDO
     assert "não pode mais ser cancelado" in r.content.decode()
+
+
+def test_confirmacao_destaca_o_horario_escolhido(client, servico, barbeiro, amanha_10h):
+    r = client.get(reverse("confirmar"), {
+        "servico": servico.pk, "barbeiro": barbeiro.pk, "inicio": amanha_10h.strftime("%Y-%m-%dT%H:%M"),
+    })
+    html = r.content.decode()
+    assert "Você escolheu" in html
+    assert f"{amanha_10h:%d/%m/%Y}, às 10:00" in html
+
+
+def test_trocar_horario_preserva_o_dia_escolhido(client, servico, barbeiro, amanha_10h):
+    r = client.get(reverse("confirmar"), {
+        "servico": servico.pk, "barbeiro": barbeiro.pk, "inicio": amanha_10h.strftime("%Y-%m-%dT%H:%M"),
+    })
+    html = r.content.decode()
+    assert "Trocar horário" in html
+    assert f"dia={amanha_10h:%Y-%m-%d}" in html
+
+
+def test_botoes_de_horario_tem_rotulo_acessivel(client, servico, barbeiro, amanha_10h):
+    r = client.get(reverse("escolher"), {
+        "servico": servico.pk, "barbeiro": barbeiro.pk, "dia": f"{amanha_10h:%Y-%m-%d}",
+    })
+    assert f'aria-label="Escolher 10:00 em {amanha_10h:%d/%m/%Y}"' in r.content.decode()
